@@ -23,30 +23,32 @@ jobs:
     steps:
       - checkout
 
-    dependencies:
-        override:
-          - mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
-    
-#       # Download and cache dependencies
+      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: 
-          test:
-            override:
-              - mvn -o surefire:test
+      - run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
-      - store_test_results:
-          path: target/surefire-reports
-      
-      - store_artifacts:
-          path: target/BackEndTestChallenge-0.0.1-SNAPSHOT.jar
+      # run tests!
+      - run: mvn test
 
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results/junit
+      - store_artifacts:
+          path: ~/test-results/junit
+      - store_artifacts:
+          path:  target/my-reports
