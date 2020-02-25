@@ -2,10 +2,14 @@ package com.freenow.utils;
 
 import com.freenow.constants.RequestType;
 import io.restassured.RestAssured;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.apache.http.params.CoreConnectionPNames;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.config;
 
@@ -14,17 +18,22 @@ import static io.restassured.RestAssured.config;
  */
 public class ReusableHelper {
 
-    private RequestSpecification requestSpecification= RestAssured.given ();
+    private RequestSpecification requestSpecification;
 
-   /* public ReusableHelper () {
-        requestSpecification= RestAssured.given ();
+    public ReusableHelper () {
+        RestAssuredConfig config = RestAssured.config()
+                .httpClient(HttpClientConfig.httpClientConfig()
+                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 100000)
+                        .setParam(CoreConnectionPNames.SO_TIMEOUT, 100000));
+
+        requestSpecification= RestAssured.given ().config (config);
         requestSpecification.header("Content-Type" , "application/json");
-    }*/
+    }
 
     public ValidatableResponse prepareAndSendRequest(RequestType requestType,String baseURL) throws Exception{
 
         requestSpecification = requestSpecification
-                .when ().log ().all ();
+                .when().log ().all ();
         return executeAPI (requestType,baseURL);
     }
 
@@ -64,7 +73,7 @@ public class ReusableHelper {
         switch(requestType)
         {
             case GET:
-                response = requestSpecification.get (baseURL).then ();
+                response = requestSpecification.get (baseURL).tim.then ();
                 break;
             case PUT:
                 response = requestSpecification.put ().then ();
