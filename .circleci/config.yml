@@ -38,17 +38,11 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn test
+      - run: mvn package
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
       - store_test_results:
-          path: ~/test-results/junit
+          path: target/surefire-reports
+      
       - store_artifacts:
-          path: ~/test-results/junit
-      - store_artifacts:
-          path:  target/my-reports
+          path: target/BackEndTestChallenge-0.0.1-SNAPSHOT.jar
+
