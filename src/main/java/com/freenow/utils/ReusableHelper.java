@@ -59,12 +59,12 @@ public class ReusableHelper {
     public ValidatableResponse executeAPI(RequestType requestType, String baseURL) throws Exception{
 
         ValidatableResponse response=null;
-        requestSpecification.baseUri (baseURL); //Setting up the base URI before fire the request
+//        requestSpecification.baseUri (baseURL); //Setting up the base URI before fire the request
 
         switch(requestType)
         {
             case GET:
-                response = requestSpecification.get ().then ();
+                response = requestSpecification.get (baseURL).then ();
                 break;
             case PUT:
                 response = requestSpecification.put ().then ();
