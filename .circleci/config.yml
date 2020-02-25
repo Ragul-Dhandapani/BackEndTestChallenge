@@ -23,22 +23,26 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+    dependencies:
+        override:
+          - mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+    
+#       # Download and cache dependencies
+#       - restore_cache:
+#           keys:
+#             - v1-dependencies-{{ checksum "pom.xml" }}
+#             # fallback to using the latest cache if no exact match is found
+#             - v1-dependencies-
 
-      - run: mvn dependency:go-offline
+#       - run: 
+          test:
+            override:
+              - mvn -o surefire:test
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      # run tests!
-      - run: mvn package
 
       - store_test_results:
           path: target/surefire-reports
