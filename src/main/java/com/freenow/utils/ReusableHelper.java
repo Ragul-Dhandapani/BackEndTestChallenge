@@ -73,7 +73,7 @@ public class ReusableHelper {
         switch(requestType)
         {
             case GET:
-                response = requestSpecification.get (baseURL).tim.then ();
+                response = requestSpecification.get (baseURL).then ();
                 break;
             case PUT:
                 response = requestSpecification.put ().then ();
