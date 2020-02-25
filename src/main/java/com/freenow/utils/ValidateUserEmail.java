@@ -4,13 +4,15 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 
 /**
+ * This Class is used to validate the user email address
+ *
  * @author Ragul Dhandapani
  *
  */
 public class ValidateUserEmail {
 
     /**
-     * This method is used to validate the email address its valid format or not.
+     * This method is used to validate the user email address whether its in valid format or not.
      *
      * @param emailId
      * @return boolean

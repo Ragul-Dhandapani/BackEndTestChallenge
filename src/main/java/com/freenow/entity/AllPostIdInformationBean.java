@@ -1,5 +1,10 @@
 package com.freenow.entity;
 
+/**
+ * This Class acts as "JAVA BEAN" Object to store & retrieve the Response Object Values
+ *
+ * @author  Ragul Dhandapani
+ */
 public class AllPostIdInformationBean {
 
     public String getUserId () {

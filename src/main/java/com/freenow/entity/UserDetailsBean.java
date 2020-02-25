@@ -1,7 +1,9 @@
 package com.freenow.entity;
 
 /**
- * @author Ragul Dhandapani
+ * This Class acts as "JAVA BEAN" Object to store & retrieve the Response Object Values
+ *
+ * @author  Ragul Dhandapani
  */
 public class UserDetailsBean {
 

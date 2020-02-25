@@ -21,12 +21,36 @@ import java.util.Map;
 import static com.freenow.constants.PropertyConstant.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class FetchUserInformationTests extends ReusableHelper {
+/**
+ * This Class is used to get one User(Given) Blog Posts comments and validate the other user email addresses who has
+ * commented in the same Blog Post.
+ *
+ *  FYI - You cannot run this class directly , since used @Parameters tag in the @Test Method. Hence recommended
+ *  approach is to run the tests from
+ *  "testng.xml" file
+ *
+ * @author Ragul Dhandapani
+ */
+public class ValidateUserEmailAddress extends ReusableHelper {
 
+    /**
+     * Endpoint URI's Declaration
+     */
     private String GET_USER_INFO = PropertyConstant.baseURL+"/users";
     private String GET_USER_ALL_POST_INFO = PropertyConstant.baseURL+"/posts?userId=";
     private String GET_USER_ALL_POST_COMMENTS_INFO = PropertyConstant.baseURL+"/posts/%postId%/comments";
 
+    /**
+     * Hits UserInformation Endpoint and store the "UserId" in iTestContext(TestNG Session) Variable
+     * for easy retrieval in the other "@Tests"
+     *
+     * @Parameters - Tag is used to get the Particular username from TestNG.xml suite (refer the <Parameter> tag
+     * in testng.xml </Parameter>)
+     *
+     * @param iTestContext
+     * @param userName
+     * @throws Exception
+     */
     @Parameters({ "UserInfo-param" })
     @BeforeClass
     public void fetchUserInformation(ITestContext iTestContext,String userName) throws Exception{
@@ -39,6 +63,13 @@ public class FetchUserInformationTests extends ReusableHelper {
 
     }
 
+    /**
+     * Hits UserPostsInformation Endpoint to get all user posts along with postId to retrieve the comments.
+     *  and store the Endpoint Response in "Java Bean" (POJO classes) to retrieve easy.
+     *
+     * @param iTestContext
+     * @throws Exception
+     */
     @Test(priority=1)
     public void fetchUserPosts(ITestContext iTestContext)throws  Exception{
 
@@ -47,6 +78,8 @@ public class FetchUserInformationTests extends ReusableHelper {
         requestParam.put ("userId",iTestContext.getAttribute ("UserId"));
 
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET, GET_USER_ALL_POST_INFO,requestParam);
+//      ValidatableResponse response = prepareAndSendRequest (RequestType.GET,
+//      GET_USER_ALL_POST_INFO+iTestContext.getAttribute ("UserId"));
         validateResponseStatus (response,HttpStatus.SC_OK,HTTP_SC_OK_STATUS_LINE);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -56,6 +89,13 @@ public class FetchUserInformationTests extends ReusableHelper {
         iTestContext.setAttribute ("PostIdInformation",allPostIdInformationList);
     }
 
+    /**
+     * Hits UserCommentsInformation Endpoint with help of "PostId" & store the Response into "Java Bean" (POJO classes)
+     * then iterate & validate the Blog comments User email address is valid or not.
+     *
+     * @param iTestContext
+     * @throws Exception
+     */
     @Test(priority=2)
     public void fetchUserPostCommentsInformation(ITestContext iTestContext)throws  Exception{
 
@@ -82,6 +122,13 @@ public class FetchUserInformationTests extends ReusableHelper {
         }
     }
 
+    /**
+     * Reusable method to retrieve the given JsonPath from the Response Object
+     *
+     * @param response
+     * @param jsonPath
+     * @return String
+     */
     public String extractUserIdInformation(ValidatableResponse response,String jsonPath){
 
        JSONArray value=new JSONArray (JsonPath.read(response.extract ().body ().asString (),jsonPath).toString ());

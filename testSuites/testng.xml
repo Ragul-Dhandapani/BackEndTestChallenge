@@ -3,8 +3,9 @@
     <parameter name="UserInfo-param" value="Samantha" />
     <test name="Verify Email Address">
         <classes>
-            <class name="com.freenow.tests.FetchUserInformationTests"/>
-<!--            <class name="com.cybg.tests.GetUsersPostInformationTest"/>-->
+            <class name="com.freenow.tests.ValidateUserEmailAddress"/> <!-- Positive Scenario -->
+            <class name="com.freenow.tests.ServiceNotFoundTest"/> <!-- Negative Scenario -->
+            <class name="com.freenow.tests.BadRequestTest"/> <!-- Negative Scenario -->
         </classes>
     </test>
 </suite>

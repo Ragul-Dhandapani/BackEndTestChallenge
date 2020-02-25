@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
 
 /**
- * @author Ragul Dhandapani
+ * This Class acts as "JAVA BEAN" Object to store & retrieve the Response Object Values
+ *
+ * @author  Ragul Dhandapani
  */
 @JsonFormat (shape = JsonFormat.Shape.OBJECT)
 public class CommentsInformation {
