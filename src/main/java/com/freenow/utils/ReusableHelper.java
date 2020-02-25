@@ -31,8 +31,8 @@ public class ReusableHelper {
     public ReusableHelper () {
         RestAssuredConfig config = RestAssured.config()
                 .httpClient(HttpClientConfig.httpClientConfig()
-                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000)
-                        .setParam(CoreConnectionPNames.SO_TIMEOUT, 10000));
+                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 100000)
+                        .setParam(CoreConnectionPNames.SO_TIMEOUT, 100000));
 
         requestSpecification= RestAssured.given ().config (config).relaxedHTTPSValidation().noFilters ();
         requestSpecification.header("Content-Type" , "application/json");
