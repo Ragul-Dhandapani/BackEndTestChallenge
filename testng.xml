@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name = "Blog Post Information" parallel="none">
+    <parameter name="UserInfo-param" value="Samantha" />
+    <test name="Verify Email Address">
+        <classes>
+            <class name="com.freenow.tests.FetchUserInformationTests"/>
+<!--            <class name="com.cybg.tests.GetUsersPostInformationTest"/>-->
+        </classes>
+    </test>
+</suite>
