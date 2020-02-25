@@ -39,6 +39,7 @@ jobs:
 
       # run tests!
       - run: mvn clean test
+          no_output_timeout: 30m
 
       - run:
           name: Save test results
