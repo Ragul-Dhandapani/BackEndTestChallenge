@@ -9,6 +9,9 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.params.CoreConnectionPNames;
+
+import java.io.PrintStream;
+import java.io.StringWriter;
 import java.util.Map;
 
 
@@ -20,21 +23,14 @@ import java.util.Map;
  */
 public class ReusableHelper {
 
-
-    private  RequestSpecification requestSpecification;
     /**
-     * This Constructor block is used to set the configuration & apply a basic headers to hit the endpoints
+     * Variable Declaration
      */
-    public ReusableHelper () {
-       /* RestAssuredConfig config = RestAssured.config()
-                .httpClient(HttpClientConfig.httpClientConfig()
-                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 100000)
-                        .setParam(CoreConnectionPNames.SO_TIMEOUT, 100000));
+    private  RequestSpecification requestSpecification;
 
-        requestSpecification= RestAssured.given ().config (config).relaxedHTTPSValidation().noFilters ();
-        requestSpecification.header("Content-Type" , "application/json");*/
-    }
-
+    /**
+     * This methhod is used to set the configuration & apply a basic headers to hit the endpoints
+     */
     public RequestSpecification getRequestSpec(){
 
           RestAssuredConfig config = RestAssured.config()

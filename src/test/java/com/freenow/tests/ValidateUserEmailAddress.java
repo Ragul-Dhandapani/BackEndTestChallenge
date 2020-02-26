@@ -78,8 +78,6 @@ public class ValidateUserEmailAddress extends ReusableHelper {
         requestParam.put ("userId",iTestContext.getAttribute ("UserId"));
 
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET, GET_USER_ALL_POST_INFO,requestParam);
-//      ValidatableResponse response = prepareAndSendRequest (RequestType.GET,
-//      GET_USER_ALL_POST_INFO+iTestContext.getAttribute ("UserId"));
         validateResponseStatus (response,HttpStatus.SC_OK,HTTP_SC_OK_STATUS_LINE);
 
         ObjectMapper mapper = new ObjectMapper();
