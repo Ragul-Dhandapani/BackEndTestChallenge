@@ -20,22 +20,31 @@ import java.util.Map;
  */
 public class ReusableHelper {
 
-    /**
-     * Declaration
-     */
-    private RequestSpecification requestSpecification;
 
+    private  RequestSpecification requestSpecification;
     /**
      * This Constructor block is used to set the configuration & apply a basic headers to hit the endpoints
      */
     public ReusableHelper () {
-        RestAssuredConfig config = RestAssured.config()
+       /* RestAssuredConfig config = RestAssured.config()
                 .httpClient(HttpClientConfig.httpClientConfig()
                         .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 100000)
                         .setParam(CoreConnectionPNames.SO_TIMEOUT, 100000));
 
         requestSpecification= RestAssured.given ().config (config).relaxedHTTPSValidation().noFilters ();
-        requestSpecification.header("Content-Type" , "application/json");
+        requestSpecification.header("Content-Type" , "application/json");*/
+    }
+
+    public RequestSpecification getRequestSpec(){
+
+          RestAssuredConfig config = RestAssured.config()
+                .httpClient(HttpClientConfig.httpClientConfig()
+                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 200000)
+                        .setParam(CoreConnectionPNames.SO_TIMEOUT, 200000));
+
+       return RestAssured.given ().config (config).relaxedHTTPSValidation().noFilters ()
+                .header ("Content-Type" , "application/json");
+
     }
 
     /**
@@ -48,7 +57,8 @@ public class ReusableHelper {
      */
     public ValidatableResponse prepareAndSendRequest(RequestType requestType,String baseURL) throws Exception{
 
-        requestSpecification = requestSpecification
+
+        requestSpecification = getRequestSpec()
                 .when().log ().all ();
         return executeAPI (requestType,baseURL);
     }
@@ -64,7 +74,7 @@ public class ReusableHelper {
     public ValidatableResponse prepareAndSendRequest(RequestType requestType,String baseURL, String requestBody)
             throws Exception{
 
-        requestSpecification = requestSpecification
+        requestSpecification = getRequestSpec ()
                 .body (requestBody)
                 .when ().log ().all ();
         return executeAPI (requestType,baseURL);
@@ -83,7 +93,8 @@ public class ReusableHelper {
                                                      Map<String,Object> queryParam,
                                                      String requestBody) throws Exception{
 
-            requestSpecification = requestSpecification.queryParams(queryParam)
+
+            requestSpecification = getRequestSpec ().queryParams(queryParam)
                     .body (requestBody)
                     .when ().log ().all ();
 
@@ -101,7 +112,7 @@ public class ReusableHelper {
     public ValidatableResponse prepareAndSendRequest(RequestType requestType, String baseURL,
                                                      Map<String,Object> queryParam) throws Exception{
 
-        requestSpecification = requestSpecification.queryParams(queryParam).when ().log ().all ();
+        requestSpecification = getRequestSpec ().queryParams(queryParam).when ().log ().all ();
 
         return executeAPI (requestType,baseURL);
     }
