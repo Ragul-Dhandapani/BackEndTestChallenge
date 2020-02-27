@@ -44,12 +44,12 @@ jobs:
           name: Save test results
           no_output_timeout: 30m
           command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+            mkdir -p ~/test-results/Extent-Reports/
+            find . -type f -regex ".*/Automation.*html" -exec cp {} ~/test-results/Extent-Reports/ \;
           when: always
       - store_test_results:
-          path: ~/test-results/junit
+          path: ~/test-results/Extent-Reports
       - store_artifacts:
-          path: ~/test-results/junit
+          path: ~/test-results/Extent-Reports
       - store_artifacts:
           path:  target/my-reports
