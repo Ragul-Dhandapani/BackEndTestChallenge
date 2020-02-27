@@ -1,17 +1,16 @@
 package com.freenow.utils;
 
 import com.freenow.constants.RequestType;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import io.restassured.RestAssured;
 import io.restassured.builder.ResponseBuilder;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.params.CoreConnectionPNames;
-
-import java.io.PrintStream;
-import java.io.StringWriter;
 import java.util.Map;
 
 
@@ -26,7 +25,10 @@ public class ReusableHelper {
     /**
      * Variable Declaration
      */
-    private  RequestSpecification requestSpecification;
+    private RequestSpecification requestSpecification;
+
+    public static ExtentTest extentTest;
+    public static ExtentReports extentReports;
 
     /**
      * This methhod is used to set the configuration & apply a basic headers to hit the endpoints
@@ -37,6 +39,7 @@ public class ReusableHelper {
                 .httpClient(HttpClientConfig.httpClientConfig()
                         .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 200000)
                         .setParam(CoreConnectionPNames.SO_TIMEOUT, 200000));
+
 
        return RestAssured.given ().config (config).relaxedHTTPSValidation().noFilters ()
                 .header ("Content-Type" , "application/json");
@@ -125,6 +128,8 @@ public class ReusableHelper {
 
         ValidatableResponse response=null;
 
+
+
         switch(requestType)
         {
             case GET:
@@ -146,7 +151,13 @@ public class ReusableHelper {
                 throw new UnsupportedOperationException("Request type is not supported.");
 
         }
-
+        //53d192
+        extentTest.log (LogStatus.INFO,"<b style=color:#9400D3>"+"Endpoint -->"+"</b>"+baseURL);
+        extentTest.log (LogStatus.INFO,"<b style=color:#9400D3>"+"Request Type -->"+"</b>"+requestType);
+        extentTest.log (LogStatus.INFO,"<b style=color:#66BB6A>"+"Status Line -->"+"</b>"+response.extract ().statusLine ());
+        extentTest.log (LogStatus.INFO,"<b style=color:#66BB6A>"+"Status Body -->"+"</b>"
+                +response.extract ().statusCode ());
+        extentTest.log (LogStatus.INFO,"<b style=color:#9400D3>"+"Response --->"+"</b>"+response.extract ().body ().asString ());
         return response.log ().all ();
     }
 

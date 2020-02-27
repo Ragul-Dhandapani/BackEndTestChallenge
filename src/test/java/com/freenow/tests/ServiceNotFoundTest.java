@@ -2,6 +2,7 @@ package com.freenow.tests;
 
 import com.freenow.constants.PropertyConstant;
 import com.freenow.constants.RequestType;
+import com.freenow.suite.Hooks;
 import com.freenow.utils.ReusableHelper;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.testng.annotations.Test;
  *
  * @author Ragul Dhandapani
  */
-public class ServiceNotFoundTest extends ReusableHelper {
+public class ServiceNotFoundTest extends Hooks {
 
     /**
      * Endpoint Declaration
@@ -25,21 +26,26 @@ public class ServiceNotFoundTest extends ReusableHelper {
     /**
      * Hits the UserInformation endpoint with misspelled to retrieve the Posts from the Blog
      *
-     * Exepcted: 404 (SNF)
+     * Expected: 404 (SNF)
      *
      * @throws Exception
      */
     @Test
     public void getUserInformation()throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Information to get ");
+        extentTest.setDescription ("Hits the UserInformation endpoint with misspelled to retrieve " +
+                "the Posts from the Blog");
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET,GET_SNF_USER_INFO);
         validateResponseStatus (response, HttpStatus.SC_NOT_FOUND,"HTTP/1.1 404 Not Found");
+
+        extentReports.endTest (extentTest);
     }
 
     /**
      * Hits the UserPostsInformation endpoint with misspelled to retrieve the Posts from the Blog
      *
-     * Exepcted: 404 (SNF)
+     * Expected: 404 (SNF)
      *
      * @throws Exception
      */
@@ -47,22 +53,34 @@ public class ServiceNotFoundTest extends ReusableHelper {
     @Test
     public void getUserPostsInformation()throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Information");
+        extentTest.setDescription ("Hits the UserPostsInformation endpoint with misspelled to retrieve " +
+                "the Posts from the Blog");
+
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET,GET_SNF_USER_ALL_POST_INFO);
         validateResponseStatus (response, HttpStatus.SC_NOT_FOUND,"HTTP/1.1 404 Not Found");
+
+        extentReports.endTest (extentTest);
     }
 
     /**
      * Hits the UserCommentsInformation endpoint with misspelled to retrieve the Posts from the Blog
      *
-     * Exepcted: 404 (SNF)
+     * Expected: 404 (SNF)
      *
      * @throws Exception
      */
     @Test
     public void getUserBlogPostCommentsInformation()throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Comments Information");
+        extentTest.setDescription ("Hits the UserCommentsInformation endpoint with misspelled " +
+                "to retrieve the Posts from the Blog");
+
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET,GET_SNF_USER_ALL_POST_COMMENTS_INFO);
         validateResponseStatus (response, HttpStatus.SC_NOT_FOUND,"HTTP/1.1 404 Not Found");
+
+        extentReports.endTest (extentTest);
     }
 
 

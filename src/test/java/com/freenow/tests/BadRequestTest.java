@@ -2,7 +2,7 @@ package com.freenow.tests;
 
 import com.freenow.constants.PropertyConstant;
 import com.freenow.constants.RequestType;
-import com.freenow.utils.ReusableHelper;
+import com.freenow.suite.Hooks;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
  *
  * @author Ragul Dhandapani
  */
-public class BadRequestTest extends ReusableHelper {
+public class BadRequestTest extends Hooks {
 
     //BAD --> BAD REQUEST (400)
     /**
@@ -28,29 +28,40 @@ public class BadRequestTest extends ReusableHelper {
     /**
      * Hits the UserPostInformation endpoint with invalid "userId" to retrieve the Posts from the Blog
      *
-     * Exepcted: 400 (BAD Request)
+     * Expected: 400 (BAD Request)
      *
      * @throws Exception
      */
     @Test
     public void getUserPostsInformation()throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Information");
+        extentTest.setDescription ("Hits UserCommentsInformation Endpoint with help of \"PostId\"");
+
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET,GET_BAD_USER_ALL_POST_INFO);
         validateResponseStatus (response, HttpStatus.SC_BAD_REQUEST,"HTTP/1.1 400 Bad Request");
+
+        extentReports.endTest (extentTest);
     }
 
     /**
      * Hits the UserCommentsInformation endpoint with invalid "postId" to retrieve the Posts from the Blog
      *
-     * Exepcted: 400 (BAD Request)
+     * Expected: 400 (BAD Request)
      *
      * @throws Exception
      */
     @Test
     public void getUserBlogPostCommentsInformation()throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Comments Information");
+        extentTest.setDescription ("Hits the UserCommentsInformation endpoint with invalid \"postId\" to retrieve " +
+                "the Posts from the Blog");
+
         String endPoint = GET_BAD_USER_ALL_POST_COMMENTS_INFO.replace ("%postId%",String.valueOf (30001011));
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET,endPoint);
         validateResponseStatus (response, HttpStatus.SC_BAD_REQUEST,"HTTP/1.1 400 Bad Request");
+
+        extentReports.endTest (extentTest);
     }
 }

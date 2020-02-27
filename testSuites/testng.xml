@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name = "Blog Post Information" parallel="none">
+<suite name = "Blog Post Information" parallel="false">
     <parameter name="UserInfo-param" value="Samantha" />
     <test name="Verify Email Address">
         <classes>
-            <class name="com.freenow.tests.ValidateUserEmailAddress"/> <!-- Positive Scenario -->
-            <class name="com.freenow.tests.ServiceNotFoundTest"/> <!-- Negative Scenario -->
+          <class name="com.freenow.tests.ValidateUserEmailAddress"/>  <!-- Positive Scenario -->
+            <class name="com.freenow.tests.ServiceNotFoundTest"/>  <!-- Negative Scenario -->
             <class name="com.freenow.tests.BadRequestTest"/> <!-- Negative Scenario -->
         </classes>
     </test>

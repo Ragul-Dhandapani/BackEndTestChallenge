@@ -4,6 +4,7 @@ import com.freenow.constants.PropertyConstant;
 import com.freenow.constants.RequestType;
 import com.freenow.entity.AllPostIdInformationBean;
 import com.freenow.entity.UserDetailsBean;
+import com.freenow.suite.Hooks;
 import com.freenow.utils.ReusableHelper;
 import com.freenow.utils.ValidateUserEmail;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author Ragul Dhandapani
  */
-public class ValidateUserEmailAddress extends ReusableHelper {
+public class ValidateUserEmailAddress extends Hooks {
 
     /**
      * Endpoint URI's Declaration
@@ -52,15 +53,18 @@ public class ValidateUserEmailAddress extends ReusableHelper {
      * @throws Exception
      */
     @Parameters({ "UserInfo-param" })
-    @BeforeClass
+    @Test(priority = 0)
     public void fetchUserInformation(ITestContext iTestContext,String userName) throws Exception{
+
+        extentTest = extentReports.startTest ("Fetch user Information");
+        extentTest.setDescription ("Hits UserInformation Endpoint and store the \"UserId\"");
 
         ValidatableResponse response = prepareAndSendRequest (RequestType.GET, GET_USER_INFO);
        String userId= extractUserIdInformation (response,"$.[?(@.username ==\""+userName+"\")].id");
        iTestContext.setAttribute ("UserId",userId);
        System.out.println ("After UserInformation is fetched --->"+iTestContext.getAttribute ("UserId"));
        validateResponseStatus (response,HttpStatus.SC_OK,HTTP_SC_OK_STATUS_LINE);
-
+        extentReports.endTest (extentTest);
     }
 
     /**
@@ -73,6 +77,10 @@ public class ValidateUserEmailAddress extends ReusableHelper {
     @Test(priority=1)
     public void fetchUserPosts(ITestContext iTestContext)throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Information");
+        extentTest.setDescription ("Hits UserPostsInformation Endpoint to get all user posts along with postId " +
+                "to retrieve the comments");
+
         System.out.println ("Second Test File--->"+iTestContext.getAttribute ("UserId"));
         Map<String , Object> requestParam=new HashMap<String, Object>();
         requestParam.put ("userId",iTestContext.getAttribute ("UserId"));
@@ -81,10 +89,13 @@ public class ValidateUserEmailAddress extends ReusableHelper {
         validateResponseStatus (response,HttpStatus.SC_OK,HTTP_SC_OK_STATUS_LINE);
 
         ObjectMapper mapper = new ObjectMapper();
-        List<AllPostIdInformationBean> allPostIdInformationList = mapper.readValue(response.extract ().body ().asString (),
+        List<AllPostIdInformationBean> allPostIdInformationList = mapper.
+                readValue(response.extract ().body ().asString (),
                 new TypeReference<List<AllPostIdInformationBean>>(){});
 
         iTestContext.setAttribute ("PostIdInformation",allPostIdInformationList);
+
+        extentReports.endTest (extentTest);
     }
 
     /**
@@ -97,6 +108,8 @@ public class ValidateUserEmailAddress extends ReusableHelper {
     @Test(priority=2)
     public void fetchUserPostCommentsInformation(ITestContext iTestContext)throws  Exception{
 
+        extentTest = extentReports.startTest ("Fetch All Users Blog Posts Comments Information");
+        extentTest.setDescription ("Hits UserCommentsInformation Endpoint with help of \"PostId\"");
 
         List<AllPostIdInformationBean> informationList = ( List<AllPostIdInformationBean> )
                 iTestContext.getAttribute ("PostIdInformation");
@@ -108,16 +121,18 @@ public class ValidateUserEmailAddress extends ReusableHelper {
          validateResponseStatus (response,HttpStatus.SC_OK,HTTP_SC_OK_STATUS_LINE);
          ObjectMapper mapper = new ObjectMapper();
 
-        /*CommentsInformation commentsInformation = mapper.readValue(new JSONArray(response.extract ().body ().asString ()),
+        /*CommentsInformation commentsInformation = mapper.readValue(
+                                                            new JSONArray(response.extract ().body ().asString ()),
                                                         CommentsInformation.class);*/
 
           List<UserDetailsBean> commentsInformation = mapper.readValue(response.extract ().body ().asString (),
                     new TypeReference<List<UserDetailsBean>>(){});
 
           for( UserDetailsBean userDetailsBean : commentsInformation){
-              Assert.assertEquals (true, ValidateUserEmail.verifyEmailId (userDetailsBean.getEmail ()));
+              Assert.assertTrue (ValidateUserEmail.verifyEmailId (userDetailsBean.getEmail ()));
             }
         }
+        extentReports.endTest (extentTest);
     }
 
     /**
